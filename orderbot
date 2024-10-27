@@ -1,0 +1,49 @@
+from telebot import types
+from telebot import TeleBot
+
+TOKEN = "7802784921:AAHXqa0eM8Ag7aKTFOOx8NGONh-mLT_s85M"
+bot = TeleBot(TOKEN)
+kb = types.ReplyKeyboardMarkup()
+bt1 = types.KeyboardButton('Spider-man 2')
+bt2 = types.KeyboardButton('Minecraft')
+bt3 = types.KeyboardButton('God of war')
+kb.add(bt1, bt2, bt3)
+@bot.message_handler(commands=["start"])
+def handle_start(msg: types.Message):
+      bot.send_message(msg.chat.id, "Здравствуйте, Пользователь! Какую игру желаете приобрести?", reply_markup=kb)
+      bot.register_next_step_handler(msg, handle_order)
+
+def handle_order(msg: types.Message):
+    global order
+    order = msg.text
+    bot.send_message(msg.chat.id, "Укажите ваш фио:", reply_markup=types.ReplyKeyboardRemove())
+    bot.register_next_step_handler(msg, handle_fio)
+
+def handle_fio(msg: types.Message):
+    global fio
+    if msg.text.isnumeric() or len(msg.text.split()) > 3:
+         bot.send_message(msg.chat.id, "Имя не корректно")
+         bot.register_next_step_handler(msg, handle_fio)
+    else:
+        bot.send_message(msg.chat.id, "Успешно!")
+        fio = msg.text
+        bot.send_message(msg.chat.id, "Укажите ваш адрес")
+        bot.register_next_step_handler(msg, handle_post)
+
+def handle_post(msg: types.Message):
+    global order, fio
+    if len(msg.text.split()) < 4 or len(msg.text.split()) > 4:
+         bot.send_message(msg.chat.id, "Адрес не корректен")
+         bot.register_next_step_handler(msg, handle_post)
+    else:
+        post = msg.text
+        bot.send_message(msg.chat.id, "Успешно!")  
+        bot.send_message(msg.chat.id, f"Ваш заказ '{order}' по ФИО {fio} принят и будет доставлен на адрес: {post}")
+    #bot.register_next_step_handler(msg, handle_end)
+
+#def handle_end(msg: types.Message):
+    #global order, fio, post  
+    #bot.send_message(msg.chat.id, f"Ваш заказ '{order}' по ФИО {fio} принят и будет доставлен на адрес: {post}")
+
+
+bot.polling(non_stop=True, interval=1)
