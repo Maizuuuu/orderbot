@@ -1,7 +1,7 @@
 from telebot import types
 from telebot import TeleBot
 
-TOKEN = "7802784921:AAHXqa0eM8Ag7aKTFOOx8NGONh-mLT_s85M"
+TOKEN = ""
 bot = TeleBot(TOKEN)
 kb = types.ReplyKeyboardMarkup()
 bt1 = types.KeyboardButton('Spider-man 2')
