@@ -32,7 +32,7 @@ def handle_fio(msg: types.Message):
 
 def handle_post(msg: types.Message):
     global order, fio
-    if len(msg.text.split()) < 4 or len(msg.text.split()) > 4:
+    if len(msg.text.split()) < 4 or len(msg.text.split()) > 4 or not msg.text.split()[-1].isnumeric():
          bot.send_message(msg.chat.id, "Адрес не корректен")
          bot.register_next_step_handler(msg, handle_post)
     else:
